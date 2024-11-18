@@ -19,7 +19,7 @@ class AttributedString
         private :original_plus
         def +(other)
           if other.is_a?(AttributedString)
-            AttributedString.new(self) + other
+            other.class.new(self) + other
           else
             original_plus(other)
           end
