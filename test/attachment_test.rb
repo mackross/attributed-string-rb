@@ -6,6 +6,12 @@ class AddingAttachmentTest < Minitest::Test
     @str.add_attachment("attachment", position: 1)
   end
 
+  def test_adding_attachment_to_empty_string
+    @str = AttributedString.new("")
+    @str.add_attachment("attachment", position: 0)
+    assert_equal ["attachment"], @str.attachments_at(0)
+  end
+
   def test_accessing_attachment
     assert @str.attachments_at(0).empty?
     assert_equal ["attachment"], @str.attachments_at(1)
