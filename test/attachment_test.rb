@@ -1,0 +1,23 @@
+require 'test_helper'
+
+class AddingAttachmentTest < Minitest::Test
+  def setup
+    @str = AttributedString.new("a string")
+    @str.add_attachment("attachment", position: 1)
+  end
+
+  def test_accessing_attachment
+    assert @str.attachments_at(0).empty?
+    assert_equal ["attachment"], @str.attachments_at(1)
+    assert @str.attachments_at(2).empty?
+  end
+
+  def test_range_movements
+    str = AttributedString.new("1")
+    str.concat(@str)
+    assert str.attachments_at(0).empty?
+    assert str.attachments_at(1).empty?
+    assert_equal ["attachment"], str.attachments_at(2)
+    assert str.attachments_at(3).empty?
+  end
+end
