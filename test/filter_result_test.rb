@@ -3,8 +3,8 @@ require "test_helper"
 class FilterResultTest < Minitest::Test
   def setup
     super
-    @attr_string.add_attrs(0..4, { bold: true })
-    @attr_string.add_attrs(7..11, { italic: true })
+    @attr_string.add_attrs(0..4, bold: true)
+    @attr_string.add_attrs(7..11, italic: true)
     @filtered_string = @attr_string.filter do |attrs|
       attrs[:bold] == true || attrs[:italic] == true
     end
@@ -59,8 +59,8 @@ class FilterResultTest < Minitest::Test
 
   def test_original_ranges_for_disjoint_original_positions
     # Add non-contiguous attributes
-    @attr_string.add_attrs(0..0, { underline: true })
-    @attr_string.add_attrs(5..5, { underline: true })
+    @attr_string.add_attrs(0..0, underline: true)
+    @attr_string.add_attrs(5..5, underline: true)
     filtered = @attr_string.filter { |attrs| attrs[:underline] == true }
     # The filtered string should be "H,"
     ranges = filtered.original_ranges_for(0..1)

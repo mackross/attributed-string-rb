@@ -9,7 +9,7 @@ class AttributedString < String
   def initialize(string = "", **attrs)
     super(string)
     @store = []
-    add_attrs(0..string.length - 1, attrs) unless attrs.empty? || string.empty?
+    add_attrs(**attrs) unless attrs.empty? || string.empty?
   end
 
   def dup
@@ -26,7 +26,7 @@ class AttributedString < String
   # @param range [Range] The range to apply the attributes to.
   # @param attributes [Hash<Symbol, Object>] The attributes to apply to the range.
   # @return [AttributedString] self for chaining
-  def add_attrs(range, attributes)
+  def add_attrs(range = 0..self.length - 1, **attributes)
     @store << { range: clamped_range(range), attributes: attributes }
     self
   end
@@ -38,7 +38,7 @@ class AttributedString < String
   # @param range [Range] The range to apply the attributes to.
   # @param attributes [Hash<Symbol, Object>] The attributes to apply to the range.
   # @return [AttributedString] self for chaining
-  def add_arr_attrs(range, attributes)
+  def add_arr_attrs(range, **attributes)
     @store << { range: range, arr_attributes: attributes }
     self
   end

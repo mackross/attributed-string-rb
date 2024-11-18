@@ -3,7 +3,7 @@ require "test_helper"
 class FilteringTest < Minitest::Test
   def test_filter_with_specific_attribute
     # Add bold attribute to "Hello"
-    @attr_string.add_attrs(0..4, { bold: true })
+    @attr_string.add_attrs(0..4, bold: true)
     # Filter to include only characters with bold: true
     result = @attr_string.filter { |attrs| attrs[:bold] == true }
 
@@ -19,8 +19,8 @@ class FilteringTest < Minitest::Test
 
   def test_filter_with_multiple_attrs
     # Add attrs to different parts
-    @attr_string.add_attrs(0..4, { bold: true })
-    @attr_string.add_attrs(7..11, { italic: true })
+    @attr_string.add_attrs(0..4, bold: true)
+    @attr_string.add_attrs(7..11, italic: true)
     # Filter to include characters that are either bold or italic
     result = @attr_string.filter do |attrs|
       attrs[:bold] == true || attrs[:italic] == true
@@ -52,9 +52,9 @@ class FilteringTest < Minitest::Test
 
   def test_filter_with_overlapping_attrs
     # Add bold to "Hello"
-    @attr_string.add_attrs(0..4, { bold: true })
+    @attr_string.add_attrs(0..4, bold: true)
     # Add italic to "lo, W"
-    @attr_string.add_attrs(3..7, { italic: true })
+    @attr_string.add_attrs(3..7, italic: true)
     # Filter to include characters with both bold and italic
     result = @attr_string.filter do |attrs|
       attrs[:bold] == true && attrs[:italic] == true
@@ -75,7 +75,7 @@ class FilteringTest < Minitest::Test
 
   def test_filter_partial_match
     # Add bold attribute to "Hello"
-    @attr_string.add_attrs(0..4, { bold: true, color: 'red' })
+    @attr_string.add_attrs(0..4, bold: true, color: 'red')
     # Filter to include characters with color: 'red'
     result = @attr_string.filter { |attrs| attrs[:color] == 'red' }
     assert_equal("Hello", result)
@@ -87,7 +87,7 @@ class FilteringTest < Minitest::Test
 
   def test_filter_with_non_boolean_attrs
     # Add color attribute to "World"
-    @attr_string.add_attrs(7..11, { color: 'blue' })
+    @attr_string.add_attrs(7..11, color: 'blue')
     # Filter to include characters with color 'blue'
     result = @attr_string.filter { |attrs| attrs[:color] == 'blue' }
     assert_equal("World", result)
@@ -99,9 +99,9 @@ class FilteringTest < Minitest::Test
 
   def test_filter_combined_attrs
     # Add attrs to "Hello"
-    @attr_string.add_attrs(0..4, { bold: true, color: 'red' })
+    @attr_string.add_attrs(0..4, bold: true, color: 'red')
     # Add attrs to "World"
-    @attr_string.add_attrs(7..11, { bold: true, color: 'blue' })
+    @attr_string.add_attrs(7..11, bold: true, color: 'blue')
     # Filter to include bold characters
     result = @attr_string.filter { |attrs| attrs[:bold] == true }
     assert_equal("HelloWorld", result)
@@ -113,7 +113,7 @@ class FilteringTest < Minitest::Test
 
   def test_filter_no_matching_attrs
     # Add bold to "Hello"
-    @attr_string.add_attrs(0..4, { bold: true })
+    @attr_string.add_attrs(0..4, bold: true)
     # Filter to include characters with italic attribute
     result = @attr_string.filter { |attrs| attrs[:italic] == true }
     assert_equal("", result)
@@ -121,7 +121,7 @@ class FilteringTest < Minitest::Test
 
   def test_original_position_out_of_bounds
     # Add bold to "Hello"
-    @attr_string.add_attrs(0..4, { bold: true })
+    @attr_string.add_attrs(0..4, bold: true)
     # Filter to include bold characters
     result = @attr_string.filter { |attrs| attrs[:bold] == true }
     # Attempt to access an out-of-bounds position

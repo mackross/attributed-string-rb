@@ -14,7 +14,7 @@ class InitializersTest < Minitest::Test
   end
 
   def test_dup
-    @attr_string.add_attrs(0..4, { bold: true })
+    @attr_string.add_attrs(0..4, bold: true)
     dup = @attr_string.dup
     0.upto(4) do |i|
       assert_equal({ bold: true }, dup.attrs_at(i))
