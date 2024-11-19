@@ -2,6 +2,17 @@
 
 An attributed string implementation for Ruby.
 
+An attributed string contains key-value pairs known as attributes that specify additional information related to ranges of characters within the string. Attributed strings support any key-value pair, but are often used for: 
+
+- Rendering attributes such as font, color,  and other details.
+- Attributes for inline-attachments such as images, videos, files, etc. 
+- Semantic attributes such as link URLs or tool-tip information
+- Language attributes to support automatic gender agreement or verb agreement. 
+- Accessibility attributes that provide information for assistive technologies
+- Custom attributes you define
+
+You will typically need to create a presenter for an attributed string, as the default shows no attribute information and inspect shows all attributes. 
+
 ## Installation
 
 Add this line to your application's Gemfile:
