@@ -35,6 +35,7 @@ class AttributedString < String
     new_string.instance_variable_set(:@store, store)
     new_string
   end
+  alias_method :[], :slice
 
   def concat(other)
     if other.is_a?(AttributedString)

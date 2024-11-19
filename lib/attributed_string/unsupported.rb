@@ -180,10 +180,6 @@ class AttributedString < String
 
   # Unsupported.
   # Consider opening pull request
-  def [](*args, **kwargs, &block) = raise Todo
-
-  # Unsupported.
-  # Consider opening pull request
   def byteslice(*args, **kwargs, &block) = raise Todo
 
   # Unsupported.

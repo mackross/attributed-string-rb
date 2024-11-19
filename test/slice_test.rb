@@ -38,6 +38,7 @@ class SliceTest < Minitest::Test
   def test_a_one
     expected = AttributedString.new("e", bold: true, underline: true)
     assert_equal expected, @a.slice(1)
+    assert_equal expected, @a[1]
   end
 
   # ...and ..
