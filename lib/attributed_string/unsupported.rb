@@ -53,10 +53,6 @@ class AttributedString < String
 
   # Unsupported.
   # Consider opening pull request
-  def []=(*args, **kwargs, &block) raise Todo; end
-
-  # Unsupported.
-  # Consider opening pull request
   def squeeze(*args, **kwargs, &block) = raise Todo
 
   # Unsupported.

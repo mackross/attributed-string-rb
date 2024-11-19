@@ -1,5 +1,14 @@
 class AttributedString
-  def inspect(color: true)
+# Inspect prints the attributed string in an easily readable way.
+# An example inspect output "{ k1: 1 }these have the attributes k1: 1 { k1: 2, k2: true }these have 2 attrs k1: 2, and k2: true { -k2 }and these have k1: 2 { -k1 }and these have none"
+# could be constructed as:
+#
+#   ("these have the attributes k1: 1 ".to_attr_s(k1: 1) +
+#   "these have 2 attrs k1: 2, and k2: true ".to_attr_s(k1: 2, k2: true) +
+#   "and these have k1: 2 ".to_attr_s(k1: 2) +
+#   "and these have none").inspect
+#
+  def inspect(color: false)
     # Collect all positions where attributes change
     positions = Set.new
 

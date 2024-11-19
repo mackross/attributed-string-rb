@@ -80,6 +80,20 @@ class AttributedString < String
     self.dup.concat(other)
   end
 
+  def []=(arg, *args, value)
+      if arg.is_a?(Regexp)
+        raise Todo, "Regular expression assignment not implemented for []=, consider raising a pull request"
+      end
+      value ||= ""
+      value = value.is_a?(AttributedString) ? value : self.class.new(value)
+
+      range = arg.is_a?(Range) ? normalize_range(arg) : normalize_integer_slice_args(arg, *args)
+      return nil if range.nil?
+      slice!(range)
+      insert(range.begin, value)
+      value
+  end
+
   private
 
   def normalize_range(range, len: self.length)
