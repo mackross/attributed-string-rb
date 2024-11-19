@@ -6,10 +6,10 @@ class AttributedString < String
   def insert(index, other)
     if other.is_a?(AttributedString) && other.length > 0
       index = normalize_index(index, len: self.length + 1)
-      new_ranges = split_ranges(@store, index, other.length)
+      split_ranges(@store, index, other.length, self.length + other.length)
       store = other.instance_variable_get(:@store).map { |obj| obj.dup }
       translate_ranges(store, distance: index)
-      @store.concat(store, new_ranges)
+      @store.concat(store)
     end
     super
   end
@@ -17,11 +17,9 @@ class AttributedString < String
   def slice(arg, *args)
     result = super
     raise Todo, "Regular expression not implemented for slice, consider raising a pull request" if arg.is_a?(Regexp)
-    if arg.is_a?(Range)
-      range = normalize_range(arg)
-    else
-      range = normalize_integer_slice_args(arg, *args)
-    end
+
+    range = arg.is_a?(Range) ? normalize_range(arg) : normalize_integer_slice_args(arg, *args)
+
     return range if range.nil?
     raise RuntimeError if range.size != result.length
     store = @store.map do |obj|
@@ -31,11 +29,26 @@ class AttributedString < String
         obj[:range] = translate_range(clamped, distance: -range.begin)
       end
     end.compact
+
     new_string = self.class.new(result)
     new_string.instance_variable_set(:@store, store)
     new_string
   end
   alias_method :[], :slice
+
+  def slice!(arg, *args)
+    result = slice(arg, *args)
+    return result if result.nil?
+
+    range = arg.is_a?(Range) ? normalize_range(arg) : normalize_integer_slice_args(arg, *args)
+    return result if range.nil?
+
+    super(range)
+
+    split_ranges(@store, range.begin, -range.size, self.length)
+
+    result
+  end
 
   def concat(other)
     if other.is_a?(AttributedString)
@@ -145,25 +158,58 @@ class AttributedString < String
   # splits the ranges in the store at the given index
   # if the index is negative, it will be counted from the end of the string
   # @param index [Integer] the index to split the ranges at
-  def split_ranges(store, index, gap)
+  # @param gap [Integer] the gap to insert at the index, if its negative, it will delete
+  # @param new_length [Integer] the new length of the string, used to remove ranges that are out of bounds
+  def split_ranges(store, index, gap, new_length)
     new_ranges = []
     store.each_with_index do |obj, idx|
       range = obj[:range]
-      next if index < range.min
-      next if index > range.max
-      start = range.min
-      if range.exclude_end?
-        new_ranges << { range: (index + gap) ... (range.end + gap), attributes: obj[:attributes] }
-        range = start...index
-      else
-        new_ranges << { range: (index + gap) .. (range.end + gap) , attributes: obj[:attributes] }
-        range = start..index-1
-      end
-      obj[:range] = range
-    end
-    new_ranges
-  end
 
+      if gap > 0
+        if index <= range.begin
+          # Shift the range
+          obj[:range] = translate_range(range, distance: gap)
+        elsif index > range.begin && index <= range.end
+          # Attribute spans over the insertion point; split into two
+          original_end = range.end
+          obj[:range] = range.begin..(index - 1)
+          new_range = (index + gap)..(original_end + gap)
+          new_obj = obj.dup
+          new_obj[:range] = new_range
+          new_ranges << new_obj
+        end
+      else
+        # Deletion logic
+        deletion_end = index - gap - 1  # Since gap is negative
+        if range.end < index
+          # Case 1: Attribute entirely before deletion; no change needed
+          next
+        elsif range.begin > deletion_end
+          # Case 2: Attribute entirely after deletion; shift it
+          obj[:range] = translate_range(range, distance: gap)
+        elsif range.begin >= index && range.end <= deletion_end
+          # Case 5: Attribute entirely within deletion; remove it
+          store[idx] = nil
+        elsif range.begin >= index && range.end > deletion_end
+          # Case 3: Attribute starts within deletion, ends after deletion
+          obj[:range] = (index)..(range.end + gap)
+        elsif range.begin < index && range.end >= index && range.end <= deletion_end
+          # Case 4: Attribute starts before deletion, ends within deletion
+          obj[:range] = range.begin..(index - 1)
+        elsif range.begin < index && range.end > deletion_end
+          # Case 6: Attribute spans over deletion
+          obj[:range] = range.begin..(range.end + gap)
+        end
+
+        # Remove ranges that are now invalid
+        if obj[:range].end < obj[:range].begin || obj[:range].end < 0 || obj[:range].begin >= new_length
+          store[idx] = nil
+        end
+      end
+    end
+    store.concat(new_ranges)
+    store.compact!
+  end
 
   def translate_ranges(store, distance:)
     store.each do |obj|

@@ -51,11 +51,6 @@ class AttributedString < String
   # Consider opening pull request
   def tr_s!(*args, **kwargs, &block) = raise Todo
 
-
-  # Unsupported.
-  # Consider opening pull request
-  def slice!(*args, **kwargs, &block) = raise Todo
-
   # Unsupported.
   # Consider opening pull request
   def []=(*args, **kwargs, &block) raise Todo; end
