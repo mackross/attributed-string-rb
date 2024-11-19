@@ -27,8 +27,9 @@ class AttributedString < String
   # @param attributes [Hash<Symbol, Object>] The attributes to apply to the range.
   # @return [AttributedString] self for chaining
   def add_attrs(range = 0..self.length - 1, **attributes)
-    return if attributes.empty? || self.empty?
-    @store << { range: clamped_range(range), attributes: attributes }
+    range = normalize_range(range)
+    return self if attributes.empty? || self.empty? || range.nil? || range.size.zero?
+    @store << { range: range, attributes: attributes }
     self
   end
 
@@ -40,6 +41,8 @@ class AttributedString < String
   # @param attributes [Hash<Symbol, Object>] The attributes to apply to the range.
   # @return [AttributedString] self for chaining
   def add_arr_attrs(range, **attributes)
+    range = normalize_range(range)
+    return self if attributes.empty? || self.empty? || range.nil? || range.size.zero?
     @store << { range: range, arr_attributes: attributes }
     self
   end
@@ -49,7 +52,11 @@ class AttributedString < String
   # @param position [Integer] The position to add the attachment to.
   # @return [AttributedString] self for chaining
   def add_attachment(attachment, position:)
-    @store << { range: position..position, attachment: attachment }
+    range = normalize_range(position..position)
+    range = 0...0 if position.zero? && self.empty?
+    raise ArgumentError, "Position out of bounds" if range.nil?
+    return self if attachment.nil? || (self.empty? && position != 0)
+    @store << { range:, attachment: }
     self
   end
 
@@ -59,7 +66,7 @@ class AttributedString < String
   def attachments_at(position)
     result = []
     @store.each do |stored_val|
-      if stored_val[:range].include?(position) && stored_val[:attachment]
+      if stored_val[:range].begin == position && stored_val[:attachment]
         result << stored_val[:attachment]
       end
     end
@@ -112,21 +119,11 @@ class AttributedString < String
 
   def ==(other)
     return false unless other.is_a?(AttributedString)
-    super && @store == other.instance_variable_get(:@store)
+    # not super efficient, but it works for now
+    (0...length).all? { |i| attrs_at(i) == other.attrs_at(i) && attachments_at(i) == other.attachments_at(i) }
   end
 
-  private
 
-  def clamped_range(range)
-    if range.max >= length
-      if range.exclude_end?
-        range.min...length
-      else
-        range.min..length - 1
-      end
-    else
-      range
-    end
-  end
+
 
 end

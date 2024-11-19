@@ -10,8 +10,13 @@ class AddingAttrsTest < Minitest::Test
     @attr_string.attrs_at(13)
   end
 
+  def test_single_char_range
+    @attr_string.add_attrs(0..0, single_char: true)
+    assert_equal({ single_char: true }, @attr_string.attrs_at(0))
+  end
+
   def test_negative_index
-    flunk
+    skip
   end
 
   def test_add_attrs_simple
