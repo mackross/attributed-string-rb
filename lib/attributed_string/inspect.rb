@@ -61,9 +61,6 @@ class AttributedString
       # Remove attributes that both ended and started (value change)
       ended_attrs.delete_if { |k, _| started_attrs.key?(k) }
 
-      # Combine ended and started attributes
-      combined_attrs = {}
-
       unless ended_attrs.empty? && started_attrs.empty?
         attrs_str = ended_attrs.keys.sort.map{ |k| "-#{k}" }
         attrs_str += started_attrs.to_a.sort{ |a,b| a[0] <=> b[0] }.map{ |a| "#{a[0]}: #{a[1]}" }
