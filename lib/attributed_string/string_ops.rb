@@ -4,13 +4,13 @@ class AttributedString < String
   end
 
   def insert(index, other)
-    if other.is_a?(AttributedString) && other.length > 0
-      index = normalize_index(index, len: self.length + 1)
-      split_ranges(@store, index, other.length, self.length + other.length)
-      store = other.instance_variable_get(:@store).map { |obj| obj.dup }
-      translate_ranges(store, distance: index)
-      @store.concat(store)
-    end
+    return super if other.empty?
+    other = AttributedString.new(other) unless other.is_a?(AttributedString)
+    index = normalize_index(index, len: self.length + 1)
+    split_ranges(@store, index, other.length, self.length + other.length)
+    store = other.instance_variable_get(:@store).map { |obj| obj.dup }
+    translate_ranges(store, distance: index)
+    @store.concat(store)
     super
   end
 
