@@ -15,7 +15,7 @@ class AttributedString
     @store.each do |attr|
       range = attr[:range]
       positions << range.begin
-      positions << range.end + 1  # Since range is inclusive
+      positions << range.begin + range.size
     end
 
     # Include the start and end positions of the string
