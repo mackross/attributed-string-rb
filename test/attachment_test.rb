@@ -6,24 +6,49 @@ class AddingAttachmentTest < Minitest::Test
     @str.add_attachment("attachment", position: 1)
   end
 
+  def test_adds_attachment_character
+    assert_equal "a#{AttributedString::ATTACHMENT_CHARACTER} string", @str.to_s
+  end
+
+  def test_has_attachment
+    assert @str.has_attachment?
+    assert @str.has_attachment?(range: 1..1)
+    assert @str.has_attachment?(range: 1...2)
+    refute @str.has_attachment?(range: 0..0)
+    refute @str.has_attachment?(range: 2..2)
+  end
+
+  def replacing_the_character_makes_the_attachment_disappear
+    assert_equal "attachment", @str.attachment_at(1)
+    @str[1] = "b"
+    assert_equal "ab string", @str.to_s
+    assert_equal nil, @str.attachment_at(1)
+  end
+
+  def test_cannot_put_two_attachments_in_the_same_position
+    @str.add_attachment("attachment2", position: 1)
+    assert_equal "attachment2", @str.attachment_at(1)
+    assert_equal "attachment", @str.attachment_at(2)
+  end
+
   def test_adding_attachment_to_empty_string
     @str = AttributedString.new("")
     @str.add_attachment("attachment", position: 0)
-    assert_equal ["attachment"], @str.attachments_at(0)
+    assert_equal "attachment", @str.attachment_at(0)
   end
 
   def test_accessing_attachment
-    assert @str.attachments_at(0).empty?
-    assert_equal ["attachment"], @str.attachments_at(1)
-    assert @str.attachments_at(2).empty?
+    assert_nil @str.attachment_at(0)
+    assert_equal "attachment", @str.attachment_at(1)
+    assert_nil @str.attachment_at(2)
   end
 
   def test_range_movements
     str = AttributedString.new("1")
     str.concat(@str)
-    assert str.attachments_at(0).empty?
-    assert str.attachments_at(1).empty?
-    assert_equal ["attachment"], str.attachments_at(2)
-    assert str.attachments_at(3).empty?
+    assert_nil str.attachment_at(0)
+    assert_nil str.attachment_at(1)
+    assert_equal "attachment", str.attachment_at(2)
+    assert_nil str.attachment_at(3)
   end
 end

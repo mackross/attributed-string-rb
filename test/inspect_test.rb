@@ -22,4 +22,9 @@ class InspectTest < Minitest::Test
     expected = "{ bold: true, font_size: 3, underline: true }Hello{ -font_size, bold: false } { -bold, italic: true }World{ -italic, -underline }"
     assert_equal expected, @attr_str.inspect(color: false)
   end
+
+  def test_attachment
+    @attr_str.add_attachment("x", position: 0)
+    assert_equal "[x]{ bold: true, font_size: 3, underline: true }Hello{ -font_size, bold: false } { -bold, italic: true }World{ -italic, -underline }", @attr_str.inspect(color: false)
+  end
 end

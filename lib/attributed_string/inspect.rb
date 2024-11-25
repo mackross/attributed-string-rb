@@ -33,6 +33,7 @@ class AttributedString
 
       substring = self.to_s[start_pos...end_pos]
       attrs_before = last_attrs
+      attachment = attachment_at(start_pos)
       attrs_after = attrs_at(start_pos)
 
       # Determine attribute changes
@@ -66,6 +67,10 @@ class AttributedString
         attrs_str += started_attrs.to_a.sort{ |a,b| a[0] <=> b[0] }.map{ |a| "#{a[0]}: #{a[1]}" }
         attrs_str = "{ #{attrs_str.join(', ')} }"
         result += dim(attrs_str, color: color)
+      end
+
+      if attachment
+        substring = dim("[#{attachment}]", color: color)
       end
 
       # Append the substring

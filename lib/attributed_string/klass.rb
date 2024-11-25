@@ -47,31 +47,6 @@ class AttributedString < String
     self
   end
 
-  # Adds an attachment to the given position.
-  # @param attachment [Object] The attachment to add.
-  # @param position [Integer] The position to add the attachment to.
-  # @return [AttributedString] self for chaining
-  def add_attachment(attachment, position:)
-    range = normalize_range(position..position)
-    range = 0...0 if position.zero? && self.empty?
-    raise ArgumentError, "Position out of bounds" if range.nil?
-    return self if attachment.nil? || (self.empty? && position != 0)
-    @store << { range:, attachment: }
-    self
-  end
-
-  # Returns the attachments at a specific position.
-  # @param position [Integer] The index in the string.
-  # @return [Array<Object>] The attachments at the given position.
-  def attachments_at(position)
-    result = []
-    @store.each do |stored_val|
-      if stored_val[:range].begin == position && stored_val[:attachment]
-        result << stored_val[:attachment]
-      end
-    end
-    result
-  end
 
 
   # Need to think about how this works as the attachment store is an array
@@ -120,7 +95,7 @@ class AttributedString < String
   def ==(other)
     return false unless other.is_a?(AttributedString)
     # not super efficient, but it works for now
-    (0...length).all? { |i| attrs_at(i) == other.attrs_at(i) && attachments_at(i) == other.attachments_at(i) }
+    (0...length).all? { |i| attrs_at(i) == other.attrs_at(i) && attachment_at(i) == other.attachment_at(i) }
   end
 
 
