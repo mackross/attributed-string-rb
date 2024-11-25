@@ -9,6 +9,11 @@ class AttributedString < String
   def initialize(string = "", **attrs)
     super(string)
     @store = []
+    if string.is_a?(AttributedString)
+      string.instance_variable_get(:@store).each do |entry|
+        @store << entry.dup
+      end
+    end
     add_attrs(**attrs)
   end
 
