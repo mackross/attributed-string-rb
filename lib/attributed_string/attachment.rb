@@ -15,13 +15,27 @@ class AttributedString < String
     self
   end
 
+  # Deletes the attachment at a specific position.
+  # @param position [Integer] The index in the string.
+  # @return [Object] The attachment that was removed.
+  def delete_attachment(position)
+    attachment = attachment_at(position)
+    self[position] = ''
+    attachment
+  end
+
+  # Check if the string has an attachment
+  # @param range [Range] The range to check for attachments.
+  # @return [Boolean] Whether the string has an attachment at the given position.
   def has_attachment?(range: 0...self.length)
+    range = normalize_range(range)
+    return false if range.nil?
     (self.to_s[range]||'').include?(ATTACHMENT_CHARACTER)
   end
 
   # Returns the attachments at a specific position.
   # @param position [Integer] The index in the string.
-  # @return [Array<Object>] The attachments at the given position.
+  # @return <Object> The attachments at the given position.
   def attachment_at(position)
     result = nil
     @store.each do |stored_val|
@@ -30,5 +44,17 @@ class AttributedString < String
       end
     end
     result
+  end
+
+  # Returns an array of attachments in the given range.
+  # @param range [Range] The range to check for attachments.
+  # @return [Array<Object>] The attachments in the given range.
+  def attachments(range: 0...self.length)
+    range = normalize_range(range)
+    attachments = []
+    self.chars[range].map.with_index do |char, i|
+      attachments << attachment_at(range.begin + i) if char == ATTACHMENT_CHARACTER
+    end
+    attachments
   end
 end

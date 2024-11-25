@@ -18,6 +18,14 @@ class AddingAttachmentTest < Minitest::Test
     refute @str.has_attachment?(range: 2..2)
   end
 
+  def test_attachments
+    @str.add_attachment("attachment2", position: 2)
+    assert_equal ["attachment", "attachment2"], @str.attachments
+    assert_equal ["attachment", "attachment2"], @str.attachments(range: 1..2)
+    assert_equal ["attachment"], @str.attachments(range: 1..1)
+    assert_equal ["attachment2"], @str.attachments(range: 2..2)
+  end
+
   def replacing_the_character_makes_the_attachment_disappear
     assert_equal "attachment", @str.attachment_at(1)
     @str[1] = "b"
