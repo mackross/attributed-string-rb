@@ -1,7 +1,4 @@
 class AttributedString < String
-  class Todo < NotImplementedError
-    def message = "Not implemented, consider adding a pull request"
-  end
 
   def insert(index, other)
     return super if other.empty?

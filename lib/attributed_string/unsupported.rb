@@ -1,4 +1,8 @@
 class AttributedString < String
+  class Todo < NotImplementedError
+    def message = "Not implemented, consider adding a pull request"
+  end
+
   # Unsupported.
   # Consider opening pull request
   def gsub(*args, **kwargs, &block) = raise Todo
