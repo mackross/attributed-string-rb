@@ -19,6 +19,9 @@ class AttributedString < String
       filtered_positions = []
       cached_block_calls = {}
 
+      # TODO: this can be optimized to use the same method that inspect uses which doesn't go through
+      # every character (it goes through each substring span with different ranges)
+      # A presenter type architecture that inspect, rainbow print, and filter can share would be ideal
       attr_string.each_char.with_index do |char, index|
         attrs = attr_string.attrs_at(index)
         # Use the attrs object ID as the cache key to handle different attribute hashes
