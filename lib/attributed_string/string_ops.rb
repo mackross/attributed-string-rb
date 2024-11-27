@@ -50,6 +50,8 @@ class AttributedString < String
     result
   end
 
+  # TODO: this should take args not other
+  # can be implemented as (other, *args)
   def concat(other)
     if other.is_a?(AttributedString)
       store = other.instance_variable_get(:@store).map { |obj| obj.dup }
