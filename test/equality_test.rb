@@ -9,8 +9,8 @@ class EqualtyTest < Minitest::Test
     refute AttributedString.new("Hello, World!", bold: true) == AttributedString.new("Hello, World!", bold: false)
   end
 
-  def test_attr_strings_not_equal_with_different_attrs
-    refute AttributedString.new("Hello  World.", bold: true) == AttributedString.new("Hello, World!", bold: false)
+  def test_attr_strings_not_equal_with_same_attrs_different_text
+    refute AttributedString.new("Hello  World.", bold: true) == AttributedString.new("Hello, World!", bold: true)
   end
 
   def test_equal_strings_with_different_attribute_stores
