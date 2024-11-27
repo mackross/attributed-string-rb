@@ -13,7 +13,7 @@ class SliceEqualsTest < Minitest::Test
     0.upto(3).each do |i|
       new = @attr_str.dup
       res = new[i] = AttributedString.new("x", x: 1)
-      assert_equal(AttributedString.new("x": 1), res)
+      assert_equal(AttributedString.new("x", x: 1), res)
       new.each_char.with_index do |char, j|
         attrs = new.attrs_at(j)
         if j != i
