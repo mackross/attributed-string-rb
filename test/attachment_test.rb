@@ -6,8 +6,18 @@ class AddingAttachmentTest < Minitest::Test
     @str.add_attachment("attachment", position: 1)
   end
 
+  def test_attachments_on_empty_string
+    str = AttributedString.new("")
+    assert_equal [], str.attachments
+  end
+
   def test_adds_attachment_character
     assert_equal "a#{AttributedString::ATTACHMENT_CHARACTER} string", @str.to_s
+  end
+
+  def test_add_attachment_to_end
+    @str.add_attachment("attachment2")
+    assert_equal "a#{AttributedString::ATTACHMENT_CHARACTER} string#{AttributedString::ATTACHMENT_CHARACTER}", @str.to_s
   end
 
   def test_has_attachment
@@ -43,6 +53,7 @@ class AddingAttachmentTest < Minitest::Test
     @str = AttributedString.new("")
     @str.add_attachment("attachment", position: 0)
     assert_equal "attachment", @str.attachment_at(0)
+    assert_equal ["attachment"], @str.attachments
   end
 
   def test_accessing_attachment

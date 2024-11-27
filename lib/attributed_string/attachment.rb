@@ -6,7 +6,7 @@ class AttributedString < String
   # @param attachment [Object] The attachment to add.
   # @param position [Integer] The position to add the attachment to.
   # @return [AttributedString] self for chaining
-  def add_attachment(attachment, position:)
+  def add_attachment(attachment, position: self.length)
     self.insert(position, ATTACHMENT_CHARACTER)
 
     range = normalize_range(position..position)
@@ -50,10 +50,16 @@ class AttributedString < String
   # @param range [Range] The range to check for attachments.
   # @return [Array<Object>] The attachments in the given range.
   def attachments(range: 0...self.length)
+    attachments_with_positions(range: range).map { |attachment| attachment[:attachment] }
+  end
+
+  # TODO: needs a test
+  def attachments_with_positions(range: 0...self.length)
     range = normalize_range(range)
+    return [] if range.nil?
     attachments = []
     self.chars[range].map.with_index do |char, i|
-      attachments << attachment_at(range.begin + i) if char == ATTACHMENT_CHARACTER
+      attachments << { attachment: attachment_at(range.begin + i), position: range.begin + i } if char == ATTACHMENT_CHARACTER
     end
     attachments
   end
