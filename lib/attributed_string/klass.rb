@@ -100,7 +100,7 @@ class AttributedString < String
   def ==(other)
     return false unless other.is_a?(AttributedString)
     # not super efficient, but it works for now
-    (0...length).all? { |i| attrs_at(i) == other.attrs_at(i) && attachment_at(i) == other.attachment_at(i) }
+    (0...length).all? { |i| attrs_at(i) == other.attrs_at(i) && attachment_at(i) == other.attachment_at(i) } && super
   end
 
 
