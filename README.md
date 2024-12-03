@@ -7,7 +7,7 @@ An attributed string implementation for Ruby.
 Add this line to your application's Gemfile:
 
 ```ruby
-  gem 'attributed-string', github: 'mackross/attributed-string-rb', branch: 'main'
+  gem 'attributed-string', github: 'instruct-rb/attributed-string', branch: 'main'
 ```
 
 
@@ -20,4 +20,15 @@ Add this line to your application's Gemfile:
   hello_world1 = AttributedString.new('Hello, World!',  color: :red, font: 'Helvetica' )
   hello_world2 = 'Hello, World!'.to_attr_s(color: :red, font: 'Helvetica')
   puts hello_world1 == hello_world2 # true
+```
+
+## Attachments
+
+```ruby
+  hello_world = AttributedString.new('Hello, World!')
+  hello_world.add_attachment("any ruby object", position: string.length)
+  puts hello_world # => "Hello, World! "
+  puts hello_world.attachments # => ["any ruby object"]
+  hello_world[-1..-1] = ''
+  puts hello_world.attachments # => []
 ```
