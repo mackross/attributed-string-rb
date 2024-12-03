@@ -45,7 +45,7 @@ class AttributedString < String
   # @param range [Range] The range to apply the attributes to.
   # @param attributes [Hash<Symbol, Object>] The attributes to apply to the range.
   # @return [AttributedString] self for chaining
-  def add_arr_attrs(range, **attributes)
+  def add_arr_attrs(range = 0..self.length - 1, **attributes)
     range = normalize_range(range)
     return self if attributes.empty? || self.empty? || range.nil? || range.size.zero?
     @store << { range: range, arr_attributes: attributes }
@@ -61,11 +61,15 @@ class AttributedString < String
 
 
   # Removes the given attributes from a range.
-  # @param range [Range] The range to remove the attributes from.
+  # @param range_or_key [Range] The range to remove the attributes from, if its not a range, it will be treated as a key to remove.
   # @param attribute_keys [Array<Symbol>] The keys of the attributes to remove.
   # @return [AttributedString] self for chaining
-  def remove_attrs(range, *attribute_keys)
-    @store << { range: range, delete: attribute_keys }
+  def remove_attrs(range_or_key, *attribute_keys)
+    if !range_or_key.is_a?(Range)
+      attribute_keys << range_or_key
+      range_or_key = 0..self.length - 1
+    end
+    @store << { range: range_or_key, delete: attribute_keys }
     self
   end
 
