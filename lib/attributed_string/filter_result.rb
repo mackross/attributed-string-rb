@@ -73,6 +73,7 @@ class AttributedString < String
     end
 
     def original_ranges_for(filtered_range)
+      # TODO: this doesn't work for excluded end range
       raise ArgumentError, "Invalid range" unless filtered_range.is_a?(Range)
       raise ArgumentError, "Range out of bounds" if filtered_range.end >= length
       if filtered_range.begin > filtered_range.end
