@@ -72,7 +72,8 @@ class AttributedString < String
   # modifies the string or returns a modified string
   def replace(other)
     super
-    @store = other.instance_variable_get(:@store).map { |obj| obj.dup }
+    other_store = other.instance_variable_get(:@store) || []
+    @store = other_store.map { |obj| obj.dup }
   end
 
   def +(other)
