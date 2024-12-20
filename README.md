@@ -1,5 +1,6 @@
 # AttributedString
 [![Ruby](https://github.com/instruct-rb/attributed-string/actions/workflows/ruby.yml/badge.svg)](https://github.com/instruct-rb/attributed-string/actions/workflows/ruby.yml)
+[![Gem Version](https://badge.fury.io/rb/attributed-string.svg)](https://badge.fury.io/rb/attributed-string)
 
 An attributed string implementation for Ruby.
 
