@@ -18,5 +18,5 @@ Gem::Specification.new do |spec|
   spec.metadata["homepage_uri"] = "https://github.com/instruct-rb/attributed-string"
 
 
-  spec.required_ruby_version = ">= 3.2.3"
+  spec.required_ruby_version = ">= 3.1"
 end
